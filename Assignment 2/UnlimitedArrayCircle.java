@@ -1,3 +1,5 @@
+// Alex Hinton
+
 public class UnlimitedArrayCircle implements UnlimitedArray {
     private int length;
     public int[] UArray;

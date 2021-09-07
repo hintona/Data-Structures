@@ -1,3 +1,5 @@
+// Alex Hinton
+
 public class UnlimitedArraySlow implements UnlimitedArray{
 
     private int length;
