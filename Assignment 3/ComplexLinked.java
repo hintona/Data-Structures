@@ -1,11 +1,15 @@
+// Alex Hinton
+
 public class ComplexLinked extends SimpleLinked{
 
     void insert(int loc, char data){
         //inserts data at index loc
         Node newNode = new Node(data);
+        Node prev = null;
 
         Node temp = start;
         for(int i = 0; i < loc; i++){
+            prev = temp;
             temp = temp.getNext();
         }
         if(loc == 0){
@@ -13,9 +17,10 @@ public class ComplexLinked extends SimpleLinked{
             start = newNode;
         }
         else{
-            newNode.setNext(temp.getNext());
-            temp.setNext(newNode);
+            newNode.setNext(temp);
+            prev.setNext(newNode);
         }
+        len++;
     }
 
     boolean remove(char data){
@@ -30,7 +35,13 @@ public class ComplexLinked extends SimpleLinked{
                 temp = temp.getNext();
             }
         }
-        prev.setNext(temp.getNext());
+        if(temp == start){
+            start = temp.getNext();
+        }
+        else{
+            prev.setNext(temp.getNext());
+        }
+        len--;
         return true;
     }
 
@@ -38,12 +49,14 @@ public class ComplexLinked extends SimpleLinked{
         Node prev = null;
         Node temp = start;
         Node next = start.getNext();
+
         while(next != null){
             temp.setNext(prev);
             prev = temp;
             temp = next;
             next = temp.getNext();
         }
+        temp.setNext(prev);
         ComplexLinked newLinked = new ComplexLinked();
         newLinked.start = temp;
         return newLinked;

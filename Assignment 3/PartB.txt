@@ -1,0 +1,8 @@
+The worst case scenario for the runtime of a reverse function would be O(N^2), 
+which would be achieved by getting the length of the list and setting it to some counter variable,
+then looping through the list to find the node at the index of the counter variable, 
+appending it to a new list (which would require looping through that new list),
+then decrementing the counter variable and repeating until the counter reached zero.
+
+My implementation is O(N). It only goes through the initial list and new list one time each, 
+at the same time, flipping the direction that the "next" pointer of each node points in.
