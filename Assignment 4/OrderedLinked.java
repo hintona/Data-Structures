@@ -6,6 +6,7 @@ public class OrderedLinked<T extends Comparable<T>> extends DoubleLinked<T>{
         list = new DoubleLinked<>();
     }
 
+
     public void insert(T data){
         if(this.len == 0){
             append(data);
@@ -30,7 +31,7 @@ public class OrderedLinked<T extends Comparable<T>> extends DoubleLinked<T>{
                     start = newData;
                 }
             newData.setNext(temp);
-            newData.setPrevious(temp.getNext());
+            newData.setPrevious(temp.getPrevious());
             temp.setPrevious(newData);
             }
         }
@@ -42,13 +43,22 @@ public class OrderedLinked<T extends Comparable<T>> extends DoubleLinked<T>{
         else{
             DNode<T> prev = found.getPrevious();
             DNode<T> next = found.getNext();
-            if(found == start) start = found.getNext();
-            if(found == end) end = found.getPrevious();
-            prev.setNext(next);
-            next.setPrevious(prev);
+            if(found == start){
+                start = found.getNext();
+                next.setPrevious(prev);
+            }
+            else if(found == end){
+                end = found.getPrevious();
+                prev.setNext(next);
+            } 
+            else{
+                prev.setNext(next);
+                next.setPrevious(prev);
+            }
             return true;
         }
     }
+
 
     public boolean search(T data){
         DNode<T> found = searcher(data);
@@ -56,7 +66,7 @@ public class OrderedLinked<T extends Comparable<T>> extends DoubleLinked<T>{
         else return true;
     }
 
-    //looks for the given data, returns node with it if found, otherwise returns null
+
     public DNode<T> searcher(T data){
         DNode<T> temp = start;
         while(temp.getData() != data){
