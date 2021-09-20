@@ -1,0 +1,32 @@
+-create empty list
+we should now have an empty list
+
+-add B,D,A,C to it
+we should now have a list of length 4 starting with A and ending with D
+
+-check what is at the front of the list
+A should be at the front of the list
+
+-print the list
+should print A,B,C,D
+
+-remove B from list
+should return true
+
+-remove F from list
+should return false
+
+-print the list
+should print A,C,D
+
+-add A,J to it
+list should now be A,A,C,D,F
+
+-print list
+should print A,A,C,D,F
+
+-remove from start of list
+list should now contain A,C,D,F
+
+-remove from end of list
+list should now just contain A,C,D
