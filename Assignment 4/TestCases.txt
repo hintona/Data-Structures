@@ -19,7 +19,7 @@ should return false
 -print the list
 should print A,C,D
 
--add A,J to it
+-add A,F to it
 list should now be A,A,C,D,F
 
 -print list

@@ -34,6 +34,7 @@ public class OrderedLinked<T extends Comparable<T>> extends DoubleLinked<T>{
             newData.setPrevious(temp.getPrevious());
             if(temp.getPrevious() != null) temp.getPrevious().setNext(newData);
             temp.setPrevious(newData);
+            System.out.println("node"+newData.getData()+" with next"+newData.getNext().getData()+" and prev"+newData.getPrevious());
             }
         }
     }
