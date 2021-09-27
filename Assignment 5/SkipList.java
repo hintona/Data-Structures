@@ -63,32 +63,39 @@ public class SkipList<T extends Comparable> implements SearchList {
     private SkipNode<T> searcher(Comparable the_data){
         SkipNode working = first;
         
-        //while working's above is not null
-            //determine if thedata is more or less than working
-                //more: is thedata more, equal, or less than working's next, or is next sentinel
-                    //sentinel: go up
-                    //more: move working to its next 
-                    //less: move up
-                    //equal: go all the way to base, which breaks loop
-                //less: is thedata more, equal, or less than working's prev, or is prev sentinel
-                    //sentinel: go up
-                    //more: move up
-                    //less: move working to its prev
-                    //equal: go all the way up to base, which breaks loop
+        while(working.getAbove() != null){
+            if(the_data.compareTo(working.getData()) == 1){
+                if(working.getNext() == end) working = working.getAbove();
+                else if(the_data.compareTo(working.getNext().getData()) == -1) working = working.getAbove();
+                else working = working.getNext();
+            }
+            else if(the_data.compareTo(working.getData()) == -1){
+                    if(working.getNext() == start) working = working.getAbove();
+                    else if(the_data.compareTo(working.getNext().getData()) == 1) working = working.getAbove();
+                    else working = working.getPrevious();
+            }
+            else{
+                working = working.getAbove();
+            }
+        }
         
-        //once at the base list, is working more or less than thedata
-            //more: is thedata more, equal, or less than working's next, or is next sentinel?
-                //sentinel: return working
-                //more: move working forward
-                //less: return working
-                //equal: return working
-            //less: is thedata more, equal, or less than working's prev, or is prev sentinel?
-                //sentinel: return sentinel
-                //more: return working's prev
-                //less: move working back
-                //equal: return working's prev
+        boolean found = false;
 
-        return null;
+        while(!found){
+            if(the_data.compareTo(working.getData()) == 1){
+                if(working.getNext() == end) found = true;
+                else if(the_data.compareTo(working.getNext().getData()) == -1) found = true;
+                else working = working.getNext();
+            }
+            else if(the_data.compareTo(working.getData()) == -1){
+                if(working.getPrevious() == start) found = true;
+                else if(the_data.compareTo(working.getPrevious()) == 1) found = true;
+                else working = working.getPrevious();
+            }
+            else found = true;
+        }
+
+        return working;
     }
 
     

@@ -59,7 +59,7 @@ public class Timing{
 	
 	//------------------
 	size = 100000;
-	s_list = new SkipList<Integer>( );
+	s_list = new OrderedLinked<Integer>( );
 	measurement = timeInsert(size, s_list);
 	dataFile.write("" + size + ", " + measurement);
 	dataFile.newLine();
