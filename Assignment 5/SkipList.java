@@ -1,25 +1,88 @@
+import java.util.Random;
+
 public class SkipList<T extends Comparable> implements SearchList {
 
- //what do we need to keep track of?
     SkipNode start; //sentinel node
     SkipNode end; //sentinel node
     SkipNode first; //start of smallest child list
+    int lists; //keep track of how many lists there are, base list is 0
 
 
     public SkipList(){
-
+        lists = 0; 
+        first = null;
+        start = new SkipNode(-1);
+        end = new SkipNode(-1);
     }
 
     @Override
     public void insert(Comparable the_data) {
-        SkipNode<T> data = searcher(the_data);
+        SkipNode data = searcher(the_data);
         SkipNode newNode = new SkipNode(the_data);
-        newNode.setNext(data.getNext());
-        data.getNext().setPrevious(newNode);
-        newNode.setPrevious(data);
-        data.setNext(newNode);
+
+        if(data != null){
+            newNode.setNext(data.getNext());
+            data.getNext().setPrevious(newNode);
+            newNode.setPrevious(data);
+            data.setNext(newNode);
+        }
+
+
+        if(newNode.getNext() == null) newNode.setNext(end);
+        if(newNode.getPrevious() == null) newNode.setPrevious(start);
         
-        // add node to child lists, remember to deal with sentinels
+        Random r = new Random();
+        int counter = 0;
+
+        while(r.nextBoolean()){
+
+            counter++;
+            SkipNode child = new SkipNode(newNode.getData());
+            newNode.setBelow(child);
+            child.setAbove(newNode);
+
+            if(counter <= lists){ //triggers only if there's already a list at the level we're at
+                SkipNode neighbourParent = newNode.getPrevious();
+
+                //Search for the node just before our parent node that has a child
+                while(neighbourParent.getBelow() == null && neighbourParent.getPrevious() != start){
+                    neighbourParent = neighbourParent.getPrevious();
+                }
+                //If we can't find one, set the child's node to start and look for the node after our parent node that has a child
+                if(neighbourParent.getPrevious() == start && neighbourParent.getBelow() == null){
+                    child.setPrevious(start);
+                    neighbourParent = newNode.getNext();
+                    while(neighbourParent.getBelow() == null && neighbourParent.getNext() != end){
+                        neighbourParent = neighbourParent.getNext();
+                    }
+                    if(neighbourParent.getNext() == end && neighbourParent.getBelow() == null){
+                        child.setNext(end);
+                    }
+                    else{
+                        child.setPrevious(neighbourParent.getBelow());
+                        child.setNext(neighbourParent.getBelow().getNext());
+                        neighbourParent.getBelow().getNext().setPrevious(child);
+                        neighbourParent.getBelow().setNext(child);
+                    }
+                }
+                //Else, we do find one and we set that parent's child to our child's neighbour
+                else{
+                    child.setPrevious(neighbourParent.getBelow());
+                    child.setNext(neighbourParent.getBelow().getNext());
+                    neighbourParent.getBelow().getNext().setPrevious(child);
+                    neighbourParent.getBelow().setNext(child);
+                }
+            }
+            else{ //otherwise this goes into an empty child list
+                child.setNext(end);
+                child.setPrevious(start);
+                first = child;
+                lists++;
+            }
+
+            newNode = child;
+
+        }
         
     }
 
@@ -52,7 +115,10 @@ public class SkipList<T extends Comparable> implements SearchList {
         while(baseStart.getAbove() != null){
             baseStart = baseStart.getAbove();
         }
-        while(baseStart.getNext() != end){
+        while(baseStart.getPrevious() != start){
+            baseStart = baseStart.getPrevious();
+        }
+        while(baseStart != end){
             System.out.print(baseStart.getData() + " ");
             baseStart = baseStart.getNext();
         }
@@ -63,36 +129,38 @@ public class SkipList<T extends Comparable> implements SearchList {
     private SkipNode<T> searcher(Comparable the_data){
         SkipNode working = first;
         
-        while(working.getAbove() != null){
-            if(the_data.compareTo(working.getData()) == 1){
-                if(working.getNext() == end) working = working.getAbove();
-                else if(the_data.compareTo(working.getNext().getData()) == -1) working = working.getAbove();
-                else working = working.getNext();
+        if(working != null){
+            while(working.getAbove() != null){
+                if(the_data.compareTo(working.getData()) == 1){
+                    if(working.getNext() == end) working = working.getAbove();
+                    else if(the_data.compareTo(working.getNext().getData()) == -1) working = working.getAbove();
+                    else working = working.getNext();
+                }
+                else if(the_data.compareTo(working.getData()) == -1){
+                        if(working.getPrevious() == start) working = working.getAbove();
+                        else if(the_data.compareTo(working.getPrevious().getData()) == 1) working = working.getAbove();
+                        else working = working.getPrevious();
+                }
+                else{
+                    working = working.getAbove();
+                }
             }
-            else if(the_data.compareTo(working.getData()) == -1){
-                    if(working.getNext() == start) working = working.getAbove();
-                    else if(the_data.compareTo(working.getNext().getData()) == 1) working = working.getAbove();
+            
+            boolean found = false;
+    
+            while(!found){
+                if(the_data.compareTo(working.getData()) == 1){
+                    if(working.getNext() == end) found = true;
+                    else if(the_data.compareTo(working.getNext().getData()) == -1) found = true;
+                    else working = working.getNext();
+                }
+                else if(the_data.compareTo(working.getData()) == -1){
+                    if(working.getPrevious() == start) found = true;
+                    else if(the_data.compareTo(working.getPrevious().getData()) == 1) found = true;
                     else working = working.getPrevious();
+                }
+                else found = true;
             }
-            else{
-                working = working.getAbove();
-            }
-        }
-        
-        boolean found = false;
-
-        while(!found){
-            if(the_data.compareTo(working.getData()) == 1){
-                if(working.getNext() == end) found = true;
-                else if(the_data.compareTo(working.getNext().getData()) == -1) found = true;
-                else working = working.getNext();
-            }
-            else if(the_data.compareTo(working.getData()) == -1){
-                if(working.getPrevious() == start) found = true;
-                else if(the_data.compareTo(working.getPrevious()) == 1) found = true;
-                else working = working.getPrevious();
-            }
-            else found = true;
         }
 
         return working;
