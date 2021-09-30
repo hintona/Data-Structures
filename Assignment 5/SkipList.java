@@ -124,6 +124,40 @@ public class SkipList<T extends Comparable> implements SearchList {
         }
     }
 
+    public void debugPrint(){
+        SkipNode baseStart = first;
+        System.out.println("First node is " + baseStart.getData());
+        System.out.println("First Child list:");
+        System.out.print(baseStart.getData() + " ");
+        while(baseStart.getNext() != end){
+            System.out.print(baseStart.getNext().getData() + " ");
+            baseStart = baseStart.getNext();
+        } 
+        baseStart = baseStart.getAbove();
+        while(baseStart.getAbove() != null){
+            while(baseStart.getPrevious() != start){
+                baseStart = baseStart.getPrevious();
+            }
+            System.out.println("\nNext list up:");
+            System.out.print(baseStart.getData() + " ");
+            while(baseStart.getNext() != end){
+                System.out.print(baseStart.getNext().getData() + " ");
+                baseStart = baseStart.getNext();
+            }
+            baseStart = baseStart.getAbove();
+        }
+        System.out.println("\nBase list:");
+        while(baseStart.getPrevious() != start){
+            baseStart = baseStart.getPrevious();
+        }
+        System.out.print(baseStart.getData() + " ");
+        while(baseStart.getNext() != end){
+            System.out.print(baseStart.getNext().getData() + " ");
+            baseStart = baseStart.getNext();
+        }
+        System.out.print("\n");
+    }
+
     // Locates where in the base list a node with the given data should be. If node with given data exists, returns that node.
     // Else, returns node "in front" of where one should go, which will be the one a little less than it 
     private SkipNode<T> searcher(Comparable the_data){
