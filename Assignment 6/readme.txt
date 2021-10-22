@@ -1,0 +1,1 @@
+3. Explanation of how to test the getheight function

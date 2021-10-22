@@ -9,19 +9,19 @@ import java.util.Random;
 public abstract class TreeUtilities{
 
     public static void printTreeHelper(IntNode nd){
-	if (nd != null){
-	    printTreeHelper(nd.getLeft());
-	    System.out.print(nd.getData());
-	    System.out.print(" ");
-	    printTreeHelper(nd.getRight());
-	}
+		if (nd != null){
+			printTreeHelper(nd.getLeft());
+			System.out.print(nd.getData());
+			System.out.print(" ");
+			printTreeHelper(nd.getRight());
+		}
     }
 
     //This function prints all of the data an IntSearchTree in order
     //Starting with the lowest and going to the highest
     public static void printTree(IntSearchTree tree){
-	printTreeHelper(tree.getRoot() );
-	System.out.println("");
+		printTreeHelper(tree.getRoot() );
+		System.out.println("");
     }
 
     //This function creates a IntSearchTree filled with randomly chosen data
@@ -39,17 +39,48 @@ public abstract class TreeUtilities{
 	return tree;
     }
 
+	public static int getMax(IntSearchTree the_tree){
+		IntNode root = the_tree.getRoot();
+		IntNode highestLeaf = root;
+		while(highestLeaf.getRight() != null){
+			highestLeaf = highestLeaf.getRight();
+		}
+		return highestLeaf.getData();
+	}
+
+	public static int getNodeHeight(IntSearchTree  the_tree, int target){
+		IntNode root = the_tree.getRoot();
+		IntNode targetLeaf = root;
+		int height = 1;
+		while(targetLeaf.getData() != target && height != -1){
+			if(targetLeaf.getData() > target){
+				if(targetLeaf.getLeft() != null){
+					targetLeaf = targetLeaf.getLeft();
+					height++;
+				}
+				else height = -1;
+			}
+			else if(targetLeaf.getData() < target){
+				if(targetLeaf.getRight() != null){
+					targetLeaf = targetLeaf.getRight();
+					height++;
+				}
+				else height = -1;
+			}
+		}
+		return height;
+	}
+
+	public static int getTreeHeight(IntSearchTree the_tree){
+		return -1;
+	}
+
     //Don't hesitate to modify this code, it is only here for testing purposes
     public static void main(String args[]){
 	IntSearchTree tree = makeRandomTree(10, 20);
 	printTree(tree);
-
-	System.out.println("Is 5 in the tree?");
-	System.out.println(tree.search(5));
-	System.out.println("Is 7 in the tree?");
-	System.out.println(tree.search(7));
-       	System.out.println("Is 18 in the tree?");
-	System.out.println(tree.search(18));
+	System.out.println(getTreeHeight(tree));
+	
 	
 	    
     }
