@@ -4,6 +4,8 @@
 //All functions in this class are static.
 //This class is never intended to be constructed.
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 import javax.management.RuntimeErrorException;
@@ -75,10 +77,23 @@ public abstract class TreeUtilities{
 	}
 
 	public static int getTreeHeight(IntSearchTree the_tree){
-		//get each value in tree,
-		//check height
-		//return largest
-		return -1;
+		Boolean notFound = true;
+		int height = 1;
+		Queue<IntNode> q = new LinkedList<>();
+		q.add(the_tree.getRoot());
+		while(notFound){
+			Queue<IntNode> childQ = new LinkedList<>();
+			for(IntNode node : q){
+				if(node.getLeft() != null) childQ.add(node.getLeft());
+				if(node.getRight() != null) childQ.add(node.getRight());
+				if(childQ.peek() == null) notFound = false;
+				else{
+					height++;
+					q = childQ;
+				}
+			}
+		}
+		return height;
 	}
 
 	public static int getNextInt(IntSearchTree  the_tree, int target){
@@ -114,9 +129,7 @@ public abstract class TreeUtilities{
     public static void main(String args[]){
 	IntSearchTree tree = makeRandomTree(10, 20);
 	printTree(tree);
-	System.out.println(getNextInt(tree, 7));
-	
-	
+	System.out.println(getTreeHeight(tree));
 	    
     }
 }
