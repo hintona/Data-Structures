@@ -6,6 +6,8 @@
 
 import java.util.Random;
 
+import javax.management.RuntimeErrorException;
+
 public abstract class TreeUtilities{
 
     public static void printTreeHelper(IntNode nd){
@@ -53,6 +55,7 @@ public abstract class TreeUtilities{
 		IntNode targetLeaf = root;
 		int height = 1;
 		while(targetLeaf.getData() != target && height != -1){
+			//System.out.println("Current height is: "+ height);
 			if(targetLeaf.getData() > target){
 				if(targetLeaf.getLeft() != null){
 					targetLeaf = targetLeaf.getLeft();
@@ -72,14 +75,46 @@ public abstract class TreeUtilities{
 	}
 
 	public static int getTreeHeight(IntSearchTree the_tree){
+		//get each value in tree,
+		//check height
+		//return largest
 		return -1;
 	}
+
+	public static int getNextInt(IntSearchTree  the_tree, int target){
+		IntNode current = the_tree.getRoot();
+
+		while(current.getData() != target){
+			if(current.getData() < target){
+				if(current.getRight() == null){
+					throw new RuntimeErrorException(null, target + " does not exist in tree");
+				}
+				else current = current.getRight();
+			}
+			else if(current.getData() > target){
+				if(current.getLeft() == null){
+					throw new RuntimeErrorException(null, target + " does not exist in tree");
+				}
+				else current = current.getLeft();
+			}
+		}
+
+		if(current.getRight() == null) return current.getParent().getData();
+		else{
+			current = current.getRight();
+			while(current.getLeft() != null){
+				current = current.getLeft();
+			}
+			return current.getData();
+		}
+	}
+
 
     //Don't hesitate to modify this code, it is only here for testing purposes
     public static void main(String args[]){
 	IntSearchTree tree = makeRandomTree(10, 20);
 	printTree(tree);
-	System.out.println(getTreeHeight(tree));
+	System.out.println(getNextInt(tree, 7));
 	
 	
 	    
